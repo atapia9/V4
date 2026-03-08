@@ -8,6 +8,10 @@ The project has been transformed from a Next.js starter template into a full-fea
 
 ## Recently Completed
 
+- [x] Fixed "Failed to fetch blocks" error — Added graceful degradation to `/api/blocks` to return empty array when Supabase not configured
+- [x] Added `initialBlocks` prop to `PixelGrid` — Allows bypassing API fetch for mock data scenarios
+- [x] Fixed "Image upload failed" error — Added graceful degradation to `/api/upload` to return mock URL when Supabase not configured
+- [x] Fixed checkout session creation — Added graceful degradation to `/api/create-checkout-session` to work without Supabase/Stripe configured (demo mode)
 - [x] Created `src/lib/mockData.ts` — Mock blocks (15 sold, 8 reserved) and stats for UI testing without Supabase/Stripe
 - [x] Created `src/app/test/page.tsx` — Full test frontend at `/test` with 5 sections: Overview, Mosaico (mock), Modal de compra, Estadísticas, Datos de bloques
 - [x] Installed dependencies: `@supabase/supabase-js`, `stripe`, `@stripe/stripe-js`, `react-zoom-pan-pinch`, `next-themes`
