@@ -11,30 +11,49 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Check block is still available
-    const supabase = createSupabaseAdmin()
-    const { data: existingBlock } = await supabase
-      .from('blocks')
-      .select('status')
-      .eq('x_position', xPosition)
-      .eq('y_position', yPosition)
-      .single()
+    // Check if Supabase is configured
+    const supabaseConfigured = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)
+    
+    // Check if Stripe is configured
+    const stripeConfigured = !!process.env.STRIPE_SECRET_KEY
 
-    if (existingBlock && existingBlock.status !== 'available') {
-      return NextResponse.json({ error: 'Block is no longer available' }, { status: 409 })
+    // If Supabase is configured, check block availability and reserve it
+    if (supabaseConfigured) {
+      const supabase = createSupabaseAdmin()
+      const { data: existingBlock } = await supabase
+        .from('blocks')
+        .select('status')
+        .eq('x_position', xPosition)
+        .eq('y_position', yPosition)
+        .single()
+
+      if (existingBlock && existingBlock.status !== 'available') {
+        return NextResponse.json({ error: 'Block is no longer available' }, { status: 409 })
+      }
+
+      // Reserve the block temporarily
+      await supabase
+        .from('blocks')
+        .upsert({
+          x_position: xPosition,
+          y_position: yPosition,
+          status: 'reserved',
+          owner_name: ownerName,
+          link_url: linkUrl,
+          image_url: imageUrl || null,
+        })
     }
 
-    // Reserve the block temporarily
-    await supabase
-      .from('blocks')
-      .upsert({
-        x_position: xPosition,
-        y_position: yPosition,
-        status: 'reserved',
-        owner_name: ownerName,
-        link_url: linkUrl,
-        image_url: imageUrl || null,
+    // If Stripe is not configured, return a mock success URL for demo mode
+    if (!stripeConfigured) {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+      const mockSessionId = `mock_session_${Date.now()}`
+      return NextResponse.json({ 
+        url: `${baseUrl}/success?session_id=${mockSessionId}&block_x=${xPosition}&block_y=${yPosition}&mock=true`,
+        sessionId: mockSessionId,
+        mock: true
       })
+    }
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 

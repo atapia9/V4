@@ -20,6 +20,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid file type' }, { status: 400 })
     }
 
+    // If Supabase is not configured, return a mock URL so the purchase flow can proceed
+    // This allows demo/local mode to work without Supabase configured
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      const mockUrl = `https://placeholder.com/block-${blockId}-${Date.now()}.jpg`
+      return NextResponse.json({ url: mockUrl })
+    }
+
     const supabase = createSupabaseAdmin()
 
     const ext = file.type === 'image/png' ? 'png' : 'jpg'
