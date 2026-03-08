@@ -1,12 +1,17 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { supabase, Block } from '@/lib/supabase'
+import { Block, GRID_COLS, GRID_ROWS, TOTAL_BLOCKS } from '@/lib/supabase'
 import { useLocale } from '@/lib/LocaleContext'
 import Image from 'next/image'
 import Link from 'next/link'
 
-type AdminView = 'login' | 'dashboard'
+// Check if Supabase is configured
+function isSupabaseConfigured() {
+  return !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+}
+
+type AdminView = 'unavailable' | 'login' | 'dashboard'
 
 export default function AdminPage() {
   const { t } = useLocale()
@@ -25,8 +30,13 @@ export default function AdminPage() {
 
   // Check existing session
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setView('dashboard')
+    if (!isSupabaseConfigured()) return
+    
+    // Dynamic import to avoid build errors
+    import('@/lib/supabase').then(({ supabase }) => {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) setView('dashboard')
+      })
     })
   }, [])
 
@@ -35,6 +45,7 @@ export default function AdminPage() {
     setLoginLoading(true)
     setLoginError('')
 
+    const { supabase } = await import('@/lib/supabase')
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
@@ -46,6 +57,7 @@ export default function AdminPage() {
   }
 
   const handleLogout = async () => {
+    const { supabase } = await import('@/lib/supabase')
     await supabase.auth.signOut()
     setView('login')
   }
@@ -113,6 +125,41 @@ export default function AdminPage() {
     available: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
     reserved: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
     sold: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30',
+  }
+
+  // Check if Supabase is available
+  if (!isSupabaseConfigured()) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+        <div className="w-full max-w-sm text-center">
+          <div className="w-12 h-12 mx-auto mb-4 grid grid-cols-3 grid-rows-3 gap-px">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-sm"
+                style={{ backgroundColor: i % 2 === 0 ? '#6366f1' : '#1e1b4b' }}
+              />
+            ))}
+          </div>
+          <h1 className="text-2xl font-bold text-white font-mono mb-2">Admin no disponible</h1>
+          <p className="text-gray-400 text-sm font-mono mb-6">
+            Configura las variables de entorno de Supabase para acceder al panel de administración.
+          </p>
+          <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-left">
+            <p className="text-gray-400 text-xs font-mono mb-2">Variables requeridas:</p>
+            <ul className="text-gray-500 text-xs font-mono space-y-1">
+              <li>• NEXT_PUBLIC_SUPABASE_URL</li>
+              <li>• NEXT_PUBLIC_SUPABASE_ANON_KEY</li>
+            </ul>
+          </div>
+          <div className="mt-6">
+            <Link href="/" className="text-gray-500 hover:text-gray-300 font-mono text-sm transition-colors">
+              ← Volver al inicio
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (view === 'login') {
@@ -238,7 +285,7 @@ export default function AdminPage() {
             { label: 'Total bloques', value: blocks.length, color: 'text-white' },
             { label: 'Vendidos', value: blocks.filter(b => b.status === 'sold').length, color: 'text-indigo-400' },
             { label: 'Reservados', value: blocks.filter(b => b.status === 'reserved').length, color: 'text-yellow-400' },
-            { label: 'Revenue', value: `$${blocks.filter(b => b.status === 'sold').length * 100}`, color: 'text-emerald-400' },
+            { label: 'Disponibles', value: blocks.filter(b => b.status === 'available').length, color: 'text-emerald-400' },
           ].map((stat) => (
             <div key={stat.label} className="bg-gray-900 border border-gray-700 rounded-lg p-4">
               <p className="text-gray-400 text-xs font-mono mb-1">{stat.label}</p>
