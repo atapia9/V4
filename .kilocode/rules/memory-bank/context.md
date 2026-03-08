@@ -8,6 +8,8 @@ The project has been transformed from a Next.js starter template into a full-fea
 
 ## Recently Completed
 
+- [x] Created `src/lib/mockData.ts` — Mock blocks (15 sold, 8 reserved) and stats for UI testing without Supabase/Stripe
+- [x] Created `src/app/test/page.tsx` — Full test frontend at `/test` with 5 sections: Overview, Mosaico (mock), Modal de compra, Estadísticas, Datos de bloques
 - [x] Installed dependencies: `@supabase/supabase-js`, `stripe`, `@stripe/stripe-js`, `react-zoom-pan-pinch`, `next-themes`
 - [x] Created `src/lib/supabase.ts` — Supabase client, Block type, grid constants (102×80 = 8160 blocks)
 - [x] Created `src/lib/stripe.ts` — Stripe client with correct API version
