@@ -8,12 +8,23 @@ import { useLocale } from '@/lib/LocaleContext'
 
 interface PixelGridProps {
   onBlockSelect: (block: Block) => void
+  /** Optional pre-loaded blocks — when provided, skips the /api/blocks fetch */
+  initialBlocks?: Block[]
 }
 
-export default function PixelGrid({ onBlockSelect }: PixelGridProps) {
+export default function PixelGrid({ onBlockSelect, initialBlocks }: PixelGridProps) {
   const { t } = useLocale()
-  const [blocks, setBlocks] = useState<Map<string, Block>>(new Map())
-  const [loading, setLoading] = useState(true)
+
+  const toBlockMap = (list: Block[]) => {
+    const m = new Map<string, Block>()
+    list.forEach(b => m.set(`${b.x_position},${b.y_position}`, b))
+    return m
+  }
+
+  const [blocks, setBlocks] = useState<Map<string, Block>>(
+    initialBlocks ? toBlockMap(initialBlocks) : new Map()
+  )
+  const [loading, setLoading] = useState(!initialBlocks)
   const [error, setError] = useState<string | null>(null)
 
   const loadBlocks = useCallback(async () => {
@@ -21,12 +32,7 @@ export default function PixelGrid({ onBlockSelect }: PixelGridProps) {
       const res = await fetch('/api/blocks')
       if (!res.ok) throw new Error('Failed to fetch blocks')
       const data: Block[] = await res.json()
-
-      const blockMap = new Map<string, Block>()
-      data.forEach(block => {
-        blockMap.set(`${block.x_position},${block.y_position}`, block)
-      })
-      setBlocks(blockMap)
+      setBlocks(toBlockMap(data))
     } catch (err) {
       console.error(err)
       setError('Failed to load the mosaic. Please refresh.')
@@ -36,8 +42,10 @@ export default function PixelGrid({ onBlockSelect }: PixelGridProps) {
   }, [])
 
   useEffect(() => {
+    // Skip fetch when caller provided blocks directly
+    if (initialBlocks) return
     loadBlocks()
-  }, [loadBlocks])
+  }, [loadBlocks, initialBlocks])
 
   // Build grid rows for rendering
   const gridRows = useMemo(() => {
