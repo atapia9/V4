@@ -60,7 +60,7 @@ export async function fetchBlockStats() {
 
   if (error) {
     console.error('Error fetching stats:', error)
-    return { sold: 0, available: TOTAL_BLOCKS, reserved: 0, revenue: 0 }
+    return { sold: 0, available: TOTAL_BLOCKS, reserved: 0 }
   }
 
   const rows = (data || []) as { status: string }[]
@@ -72,7 +72,6 @@ export async function fetchBlockStats() {
     sold,
     reserved,
     available,
-    revenue: sold * BLOCK_PRICE_USD,
   }
 }
 

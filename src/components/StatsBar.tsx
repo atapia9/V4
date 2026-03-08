@@ -8,7 +8,6 @@ interface Stats {
   sold: number
   available: number
   reserved: number
-  revenue: number
 }
 
 export default function StatsBar() {
@@ -17,7 +16,6 @@ export default function StatsBar() {
     sold: 0,
     available: TOTAL_BLOCKS,
     reserved: 0,
-    revenue: 0,
   })
   const [loading, setLoading] = useState(true)
 
@@ -72,20 +70,6 @@ export default function StatsBar() {
                   <>
                     <span className="text-white font-bold">{stats.available.toLocaleString()}</span>
                     {' '}{t('stats.available')}
-                  </>
-                )}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-yellow-500" />
-              <span className="text-sm font-mono text-gray-300">
-                {loading ? (
-                  <span className="inline-block w-20 h-4 bg-gray-700 rounded animate-pulse" />
-                ) : (
-                  <>
-                    <span className="text-white font-bold">${stats.revenue.toLocaleString()}</span>
-                    {' '}{t('stats.revenue')}
                   </>
                 )}
               </span>

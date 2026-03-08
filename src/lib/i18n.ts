@@ -25,7 +25,6 @@ export const translations: Record<Locale, Record<string, string>> = {
     // Stats
     'stats.sold': 'bloques vendidos',
     'stats.available': 'disponibles',
-    'stats.revenue': 'recaudado',
 
     // Grid
     'grid.title': 'El Mosaico',
@@ -93,7 +92,6 @@ export const translations: Record<Locale, Record<string, string>> = {
 
     'stats.sold': 'blocks sold',
     'stats.available': 'available',
-    'stats.revenue': 'raised',
 
     'grid.title': 'The Mosaic',
     'grid.available': 'Available',
@@ -156,7 +154,6 @@ export const translations: Record<Locale, Record<string, string>> = {
 
     'stats.sold': 'blocos vendidos',
     'stats.available': 'disponíveis',
-    'stats.revenue': 'arrecadado',
 
     'grid.title': 'O Mosaico',
     'grid.available': 'Disponível',
@@ -219,7 +216,6 @@ export const translations: Record<Locale, Record<string, string>> = {
 
     'stats.sold': 'blocs vendus',
     'stats.available': 'disponibles',
-    'stats.revenue': 'collectés',
 
     'grid.title': 'La Mosaïque',
     'grid.available': 'Disponible',

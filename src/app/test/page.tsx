@@ -34,7 +34,7 @@ function MockStatsBar({ stats }: { stats: typeof MOCK_STATS }) {
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-yellow-500" />
             <span className="text-sm font-mono text-gray-300">
-              <span className="text-white font-bold">${stats.revenue.toLocaleString()}</span> recaudados
+              <span className="text-white font-bold">{stats.available.toLocaleString()}</span> disponibles
             </span>
           </div>
         </div>

@@ -18,13 +18,12 @@ export async function GET() {
       sold,
       reserved,
       available,
-      revenue: sold * BLOCK_PRICE_USD,
       total: TOTAL_BLOCKS,
     })
   } catch (error) {
     console.error('GET /api/blocks/stats error:', error)
     return NextResponse.json(
-      { sold: 0, available: TOTAL_BLOCKS, reserved: 0, revenue: 0, total: TOTAL_BLOCKS },
+      { sold: 0, available: TOTAL_BLOCKS, reserved: 0, total: TOTAL_BLOCKS },
       { status: 200 }
     )
   }

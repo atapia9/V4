@@ -74,7 +74,6 @@ export const MOCK_STATS = {
   sold: MOCK_BLOCKS.filter(b => b.status === 'sold').length,
   reserved: MOCK_BLOCKS.filter(b => b.status === 'reserved').length,
   available: TOTAL_BLOCKS - MOCK_BLOCKS.filter(b => b.status === 'sold').length - MOCK_BLOCKS.filter(b => b.status === 'reserved').length,
-  revenue: MOCK_BLOCKS.filter(b => b.status === 'sold').length * BLOCK_PRICE_USD,
   total: TOTAL_BLOCKS,
 }
 
