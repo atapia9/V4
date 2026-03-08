@@ -14,30 +14,8 @@ The project has been transformed from a Next.js starter template into a full-fea
 - [x] Fixed checkout session creation — Added graceful degradation to `/api/create-checkout-session` to work without Supabase/Stripe configured (demo mode)
 - [x] Created `src/lib/mockData.ts` — Mock blocks (15 sold, 8 reserved) and stats for UI testing without Supabase/Stripe
 - [x] Created `src/app/test/page.tsx` — Full test frontend at `/test` with 5 sections: Overview, Mosaico (mock), Modal de compra, Estadísticas, Datos de bloques
-- [x] Installed dependencies: `@supabase/supabase-js`, `stripe`, `@stripe/stripe-js`, `react-zoom-pan-pinch`, `next-themes`
-- [x] Created `src/lib/supabase.ts` — Supabase client, Block type, grid constants (102×80 = 8160 blocks)
-- [x] Created `src/lib/stripe.ts` — Stripe client with correct API version
-- [x] Created `src/lib/i18n.ts` — Full translations for ES (default), EN, PT, FR
-- [x] Created `src/lib/LocaleContext.tsx` — React context for locale state
-- [x] Built `src/components/Header.tsx` — Logo, language selector, dark mode toggle, admin link
-- [x] Built `src/components/StatsBar.tsx` — Live blocks sold/available/revenue counter with progress bar
-- [x] Built `src/components/PixelBlock.tsx` — Individual block with hover effects, image display, click handlers
-- [x] Built `src/components/PixelGrid.tsx` — Full 102×80 grid with zoom/pan via react-zoom-pan-pinch
-- [x] Built `src/components/PurchaseModal.tsx` — Form with validation, image upload, Stripe checkout redirect
-- [x] Updated `src/app/page.tsx` — Hero section, mosaic section, how-it-works, footer
-- [x] Created `src/app/success/page.tsx` — Post-payment success page with pixel art animation
-- [x] Created `src/app/admin/page.tsx` — Admin dashboard with Supabase Auth login, block management
-- [x] Created `src/app/api/blocks/route.ts` — GET sold/reserved blocks
-- [x] Created `src/app/api/blocks/stats/route.ts` — GET stats (sold, available, revenue)
-- [x] Created `src/app/api/create-checkout-session/route.ts` — POST Stripe checkout session
-- [x] Created `src/app/api/webhook/route.ts` — Stripe webhook handler (marks blocks sold)
-- [x] Created `src/app/api/upload/route.ts` — Image upload to Supabase Storage
-- [x] Created `src/app/api/admin/blocks/route.ts` — Admin GET all blocks with search/filter
-- [x] Created `src/app/api/admin/blocks/[id]/route.ts` — Admin PATCH/DELETE individual blocks
-- [x] Updated `src/app/layout.tsx` — ThemeProvider, LocaleProvider, SEO metadata, OpenGraph, JSON-LD
-- [x] Updated `src/app/globals.css` — Pixel-art aesthetic, dark mode, custom scrollbar, animations
-- [x] Created `supabase/schema.sql` — Full DB schema with RLS policies and storage bucket setup
-- [x] Created `.env.local.example` — Environment variable template with setup instructions
+- [x] Removed all revenue display — Updated StatsBar, i18n, and API to only show blocks sold/available (no money)
+- [x] Fixed Admin page error — Added graceful degradation to admin page when Supabase not configured, removed revenue from admin stats
 
 ## Current Structure
 
@@ -98,3 +76,6 @@ STRIPE_WEBHOOK_SECRET
 |------|---------|
 | Initial | Template created with base setup |
 | 2026-03-08 | Full Million Dollar Homepage app built (Mosaico Digital Acambaro) |
+| 2026-03-08 | Added graceful degradation throughout app when Supabase/Stripe not configured |
+| 2026-03-08 | Removed revenue display from all components, kept only blocks sold/available |
+| 2026-03-08 | Fixed Admin page error when Supabase not configured |
